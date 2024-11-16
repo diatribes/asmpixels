@@ -17,7 +17,7 @@ extern SDL_SetRenderDrawColor
 extern SDL_RenderSetLogicalSize
 extern SDL_RenderDrawPoint
 extern SDL_GetTicks
-extern SDL_Delay	
+extern SDL_Delay    
 extern SDL_DestroyRenderer
 extern SDL_DestroyWindow
 extern SDL_Quit
@@ -31,68 +31,68 @@ extern SDL_GetError
 
 _start:
     ; init
-	mov rdi, 21
-	call SDL_Init
-	cmp rax, 0
-	jl sdlError
+    mov rdi, 21
+    call SDL_Init
+    cmp rax, 0
+    jl sdlError
 
     ; window
-	mov rdi, createWindowTitle 
-	mov rsi, 100
-	mov rdx, 100
-	mov rcx, 1280
-	mov r8, 800
-	mov r9, 4
-	call SDL_CreateWindow
-	cmp rax, 0
-	je sdlError
-	mov r12, rax
+    mov rdi, createWindowTitle 
+    mov rsi, 100
+    mov rdx, 100
+    mov rcx, 1280
+    mov r8, 800
+    mov r9, 4
+    call SDL_CreateWindow
+    cmp rax, 0
+    je sdlError
+    mov r12, rax
 
     ; renderer
-	mov rdi, rax
-	mov rsi, -1
-	mov rdx, 1
-	call SDL_CreateRenderer
-	cmp rax, 0
-	je sdlError
-	mov renderer, rax
+    mov rdi, rax
+    mov rsi, -1
+    mov rdx, 1
+    call SDL_CreateRenderer
+    cmp rax, 0
+    je sdlError
+    mov renderer, rax
 
     ; renderer logical size
-	mov rdi, rax
-	mov rsi, W
-	mov rdx, H
-	call SDL_RenderSetLogicalSize
+    mov rdi, rax
+    mov rsi, W
+    mov rdx, H
+    call SDL_RenderSetLogicalSize
 
     ; black color
     mov rdi, renderer
-	mov rsi, 0 
-	mov rdx, 0
-	mov rcx, 0 
-	mov r8, 255
-	call SDL_SetRenderDrawColor
+    mov rsi, 0 
+    mov rdx, 0
+    mov rcx, 0 
+    mov r8, 255
+    call SDL_SetRenderDrawColor
 
     ; clear
-	mov rdi, renderer
-	call SDL_RenderClear
+    mov rdi, renderer
+    call SDL_RenderClear
 
     ; red color
     mov rdi, renderer
-	mov rsi, 200
-	mov rdx, 0 
-	mov rcx, 0 
-	mov r8, 255
-	call SDL_SetRenderDrawColor
+    mov rsi, 200
+    mov rdx, 0 
+    mov rcx, 0 
+    mov r8, 255
+    call SDL_SetRenderDrawColor
 
 loopMain:
 
     call SDL_PumpEvents
 
     ; present render target;
-	mov rdi, renderer
-	call SDL_RenderPresent
+    mov rdi, renderer
+    call SDL_RenderPresent
     ; clear
-	mov rdi, renderer
-	call SDL_RenderClear
+    mov rdi, renderer
+    call SDL_RenderClear
 
     xor X, X
     jmp .loopX
@@ -123,17 +123,17 @@ loopMain:
     xor rsi, Y
     mul rsi
     mov rsi, 0
-	mov rdx, rax
-	mov rcx, Y
-	mov r8, 255
-	call SDL_SetRenderDrawColor
+    mov rdx, rax
+    mov rcx, Y
+    mov r8, 255
+    call SDL_SetRenderDrawColor
 
     ; draw pixel
     push X
     push Y
     mov rdi, renderer
-	mov rsi, X
-	mov rdx, Y
+    mov rsi, X
+    mov rdx, Y
     call SDL_RenderDrawPoint
     pop Y
     pop X
@@ -146,27 +146,27 @@ loopMain:
 
 done:
     ; free renderer 
-	mov rdi, renderer
-	call SDL_DestroyRenderer
+    mov rdi, renderer
+    call SDL_DestroyRenderer
 
     ; free window
-	mov rdi, r12
-	call SDL_DestroyWindow
+    mov rdi, r12
+    call SDL_DestroyWindow
 
     ; quit 
-	call SDL_Quit
-	mov rdi, 0
-	jmp exit
+    call SDL_Quit
+    mov rdi, 0
+    jmp exit
 
 sdlError:
-	call SDL_GetError
-	mov rsi, rax
-	mov rdi, sdlErrorMessageFmt 
-	call printf
-	mov rdi, 42
-	jmp exit
+    call SDL_GetError
+    mov rsi, rax
+    mov rdi, sdlErrorMessageFmt 
+    call printf
+    mov rdi, 42
+    jmp exit
 
 exit:
-	mov rax, 60
-	syscall
+    mov rax, 60
+    syscall
 
