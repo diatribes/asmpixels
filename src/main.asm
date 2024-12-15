@@ -1,7 +1,9 @@
 section .data
-
 sdlErrorMessageFmt db "SDL Error: %s", 10, 0
 createWindowTitle db "Blegh", 0
+
+section .bss
+event resb 64
 
 section .text
 
@@ -11,6 +13,7 @@ extern SDL_Init
 extern SDL_CreateWindow
 extern SDL_CreateRenderer
 extern SDL_PumpEvents
+extern SDL_PollEvent
 extern SDL_RenderClear
 extern SDL_RenderPresent
 extern SDL_SetRenderDrawColor
@@ -85,7 +88,10 @@ _start:
 
 loopMain:
 
-    call SDL_PumpEvents
+    mov rdi, event
+    call SDL_PollEvent
+    cmp dword [event], dword 0x100  ; event.type == SDL_QUIT
+    je done
 
     ; present render target;
     mov rdi, renderer
