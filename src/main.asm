@@ -3,7 +3,7 @@ sdlErrorMessageFmt db "SDL Error: %s", 10, 0
 createWindowTitle db "Blegh", 0
 
 section .bss
-event resb 64
+event resb 64 ; needs 56 on x86_64 i think
 
 section .text
 
@@ -41,11 +41,11 @@ _start:
 
     ; window
     mov rdi, createWindowTitle 
-    mov rsi, 100
-    mov rdx, 100
-    mov rcx, 1280
-    mov r8, 800
-    mov r9, 4
+    mov rsi, 0
+    mov rdx, 0
+    mov rcx, W
+    mov r8, H
+    mov r9, 0x1001  ; SDL_WINDOW_FULLSCREEN_DESKTOP
     call SDL_CreateWindow
     cmp rax, 0
     je sdlError
@@ -68,9 +68,9 @@ _start:
 
     ; black color
     mov rdi, renderer
-    mov rsi, 0 
+    mov rsi, 0
     mov rdx, 0
-    mov rcx, 0 
+    mov rcx, 0
     mov r8, 255
     call SDL_SetRenderDrawColor
 
@@ -103,6 +103,15 @@ loopMain:
     ; present render target;
     mov rdi, renderer
     call SDL_RenderPresent
+    
+    ; black color 
+    mov rdi, renderer
+    mov rsi, 0
+    mov rdx, 0
+    mov rcx, 0
+    mov r8, 255
+    call SDL_SetRenderDrawColor
+
     ; clear
     mov rdi, renderer
     call SDL_RenderClear
@@ -130,7 +139,7 @@ loopMain:
     mov rbx, 100
     div rbx
 
-    ; red color
+    ; color
     mov rdi, renderer
     mov rsi, X
     xor rsi, Y
