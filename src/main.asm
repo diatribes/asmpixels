@@ -93,6 +93,13 @@ loopMain:
     cmp dword [event], dword 0x100  ; event.type == SDL_QUIT
     je done
 
+    cmp dword [event], dword 0x300  ; event.type == SDL_KEYDOWN
+    jne .noInput
+    cmp dword [event + 20], byte 27
+    je done
+
+.noInput:
+
     ; present render target;
     mov rdi, renderer
     call SDL_RenderPresent
